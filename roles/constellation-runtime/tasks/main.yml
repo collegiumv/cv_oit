@@ -1,0 +1,120 @@
+---
+- name: Install EPEL (CentOS)
+  yum:
+    name: epel-release
+    state: present
+  when: ansible_distribution == "CentOS"
+  
+- name: Install EPEL (RHEL)
+  yum:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+    state: latest
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
+
+- set_fact:
+    ius_distribution_abbrev: "{{ (ansible_distribution == 'CentOS') | ternary('centos', 'rhel') }}"
+
+    # Must be state: present due to deficiency in ansible. See:
+    # https://github.com/ansible/ansible-modules-core/issues/948
+- name: install IUS release package
+  yum:
+    name: "https://{{ ius_distribution_abbrev }}{{ ansible_distribution_major_version }}.iuscommunity.org/ius-release.rpm"
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Python3
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python34
+    - python34-pip
+
+- name: Install PostreSQL
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql-server
+    - postgresql-contrib
+    - python-psycopg2
+
+- name: Initialize PostgreSQL
+  command: postgresql-setup initdb
+  args:
+    creates: /var/lib/pgsql/data/postgresql.conf
+
+- name: Enable PostgreSQL
+  service:
+    name: postgresql
+    enabled: true
+    state: started
+
+- name: Wait for the PostgreSQL server to start
+  wait_for:
+    port: 5432
+
+- name: Create Constellation Database
+  postgresql_db:
+    name: constellation_db
+  become_user: postgres
+
+- name: Create Constellation Database User
+  postgresql_user:
+    db: constellation_db
+    name: constellation_dbuser
+    password: "{{ constellation_dbpassword }}"
+    priv: ALL
+  become_user: postgres
+
+- name: Create the constellation user
+  user:
+    name: constellation
+    state: present
+    system: yes
+    createhome: no
+
+- name: Create /opt/constellation
+  file:
+    path: /opt/constellation
+    state: directory
+    owner: constellation
+    group: constellation
+    mode: 0755
+
+- name: Create /opt/constellation/scripts
+  file:
+    path: /opt/constellation/scripts
+    state: directory
+    owner: constellation
+    group: constellation
+    mode: 0755
+
+- name: Install scripts
+  copy:
+    src: "{{ item }}"
+    dest: /opt/constellation/scripts/{{ item }}
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - do_migrate
+    - do_collectstatic
+
+- name: Install Python build dependencies
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python34-devel
+    - openldap-devel
+    - gcc
+
+- name: Install uwsgi
+  yum:
+    name: "{{ item }}" 
+    state: present
+  with_items:
+    - uwsgi
+    - uwsgi-plugin-python3
+

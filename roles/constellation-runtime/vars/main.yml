@@ -1,0 +1,2 @@
+---
+constellation_dbpassword: "{{ lookup('file', 'secret/constellation_dbpassword') }}"
