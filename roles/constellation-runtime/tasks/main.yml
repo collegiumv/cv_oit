@@ -30,6 +30,12 @@
     - python34
     - python34-pip
 
+- name: Install VirtualEnv
+  pip:
+    executable: pip3
+    name: virtualenv
+    state: present
+
 - name: Install PostreSQL
   yum:
     name: "{{ item }}"
@@ -43,6 +49,16 @@
   command: postgresql-setup initdb
   args:
     creates: /var/lib/pgsql/data/postgresql.conf
+
+- name: Configure PostgreSQL User Authentication
+  copy:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: 0600
+  notify:
+    - postgres
 
 - name: Enable PostgreSQL
   service:
@@ -82,13 +98,16 @@
     group: constellation
     mode: 0755
 
-- name: Create /opt/constellation/scripts
+- name: Create Subdirectories
   file:
-    path: /opt/constellation/scripts
+    path: /opt/constellation/{{ item }}
     state: directory
     owner: constellation
     group: constellation
     mode: 0755
+  with_items:
+    - scripts
+    - constellation
 
 - name: Install scripts
   copy:
