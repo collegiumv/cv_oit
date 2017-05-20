@@ -72,7 +72,7 @@
     name: constellation
     state: present
     system: yes
-    createhome: no
+    createhome: yes
 
 - name: Create /opt/constellation
   file:

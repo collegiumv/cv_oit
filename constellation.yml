@@ -1,0 +1,5 @@
+---
+- hosts: constellation
+  become: no
+  roles:
+    - constellation
