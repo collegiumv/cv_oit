@@ -1,0 +1,31 @@
+---
+- name: Install nginx repo
+  yum_repository:
+    name: nginx
+    description: nginx release repo
+    gpgcheck: no
+    baseurl: http://nginx.org/packages/{{ ansible_distribution|lower }}/$releasever/$basearch
+
+- name: Install nginx
+  yum:
+    name: nginx
+    state: present
+
+- name: Enable nginx
+  service:
+    name: nginx
+    enabled: true
+    state: started
+
+- name: Add nginx firewall rule
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    zone: public
+    immediate: true
+  with_items:
+    - http
+    - https
+
+    

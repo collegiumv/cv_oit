@@ -1,0 +1,6 @@
+---
+- hosts: constellation
+  become: yes
+  become_method: sudo
+  roles:
+    - nginx
