@@ -5,11 +5,10 @@ SECRETS_DIR = secret
 SECRET_TARGETS = ${PLAIN_SECRETS} \
 	constellation_cert \
 
-PLAIN_SECRETS = account_salt \
-	constellation_dbpassword \
+PLAIN_SECRETS = connstellation_dbpassword
 
 secrets: mkdir_secrets ${SECRET_TARGETS}
-	@tput setaf 1 && echo "Don't forget to get account_access.list and account_words.txt and edit account_admin_username and nslcd_bind_user" && tput sgr0
+	@tput setaf 1 && echo "Make sure you don't commit the secrets/ directory!" && tput sgr0
 
 mkdir_secrets:
 	mkdir -pm 0700 ${SECRETS_DIR}
