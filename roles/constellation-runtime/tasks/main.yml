@@ -137,3 +137,20 @@
     - uwsgi
     - uwsgi-plugin-python3
 
+- name: Install uwsgi unit file
+  copy:
+    src: constellation.service
+    dest: /etc/systemd/system/constellation.service
+    owner: root
+    group: root
+    mode: 0644
+    
+- name: Configure nginx
+  template:
+    src: constellation.conf
+    dest: /etc/nginx/conf.d/constellation.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - nginx
