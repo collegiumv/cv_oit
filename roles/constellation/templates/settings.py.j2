@@ -5,9 +5,9 @@ from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # This isn't actually used by uwsgi...
-SECRET_KEY = 'I_am_a_key'
+SECRET_KEY = '{{ constellation_secret_key }}'
 
-ALLOWED_HOSTS = ["constellation.collegiumv.org"]
+ALLOWED_HOSTS = ["{{ constellation_server_name }}"]
 
 LOGIN_URL='/login'
 

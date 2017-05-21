@@ -5,7 +5,8 @@ SECRETS_DIR = secret
 SECRET_TARGETS = ${PLAIN_SECRETS} \
 	constellation_cert \
 
-PLAIN_SECRETS = connstellation_dbpassword
+PLAIN_SECRETS = connstellation_dbpassword \
+	constellation_secret_key
 
 secrets: mkdir_secrets ${SECRET_TARGETS}
 	@tput setaf 1 && echo "Make sure you don't commit the secrets/ directory!" && tput sgr0
