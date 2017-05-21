@@ -104,23 +104,24 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-AUTH_LDAP_SERVER_URI = "ldap://ldap.collegiumv.org"
+AUTH_LDAP_SERVER_URI = "ldaps://campus.ad.utdallas.edu"
 AUTH_LDAP_BIND_DN = ""
 AUTH_LDAP_BIND_PASSWORD = ""
-AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=collegiumv,dc=org"
+AUTH_LDAP_USER_DN_TEMPLATE = "CAMPUS\\%(user)s"
 
-AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-    "ou=Group,dc=collegiumv,dc=org",
-    ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
-)
-
-AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_staff": ["cn=Server Admins,ou=Group,dc=collegiumv,dc=org",
-                 "cn=Realm Admins,ou=Group,dc=collegiumv,dc=org"],
-    "is_superuser": ["cn=Server Admins,ou=Group,dc=collegiumv,dc=org",
-                     "cn=Realm Admins,ou=Group,dc=collegiumv,dc=org"],
+# This bit is crucial for MS ActiveDirectory, but no-one seems to know why
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_DEBUG_LEVEL: 0,
+    ldap.OPT_REFERRALS: 0,
 }
+
+AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    "is_staff": ["CN=CV-desktop-techs,OU=User Groups,OU=Groups,"
+                 "OU=Unix Services,OU=OPS,OU=Information Resources,"
+                 "OU=Groups,DC=campus,DC=ad,DC=utdallas,DC=edu"]
+}
+
 AUTH_LDAP_USER_ATTR_MAP = {
     "first_name": "givenName",
     "last_name": "sn",
