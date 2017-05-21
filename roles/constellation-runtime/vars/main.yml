@@ -1,2 +1,4 @@
 ---
 constellation_dbpassword: "{{ lookup('file', 'secret/constellation_dbpassword') }}"
+constellation_server_name: polaris.utdallas.edu
+constellation_use_ssl: false
