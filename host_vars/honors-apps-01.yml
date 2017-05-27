@@ -1,2 +1,4 @@
 ---
 constellation_server_name: polaris.utdallas.edu
+constellation_certificate_path: /etc/ssl/polaris.utdallas.edu.pem
+constellation_certificate_key: /etc/ssl/polaris.utdallas.edu.key

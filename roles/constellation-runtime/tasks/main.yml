@@ -154,3 +154,16 @@
     mode: 0644
   notify:
     - nginx
+
+- name: Install certificate files
+  copy:
+    src: secret/{{ item }}
+    dest: /etc/ssl/{{ item }}
+    owner: root
+    group: nginx
+    mode: 0440
+  notify:
+    - nginx
+  with_items:
+    - "{{ constellation_server_name }}.pem"
+    - "{{ constellation_server_name }}.key"

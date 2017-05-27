@@ -26,4 +26,4 @@ certreq:
 	@tput setaf 1 0 0 && echo "Follow the steps at https://www.utdallas.edu/infosecurity/DigitalCertificates_SSL.html and put the resulting key at ${SECRETS_DIR}/${role}_cert.pem" && tput sgr0
 
 constellation_cert:
-	${MAKE} role=constellation fqdn=constellation.collegiumv.org certreq
+	${MAKE} role=constellation fqdn=polaris.utdallas.edu certreq
