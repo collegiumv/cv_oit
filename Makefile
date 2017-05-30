@@ -10,6 +10,7 @@ PLAIN_SECRETS = connstellation_dbpassword \
 
 secrets: mkdir_secrets ${SECRET_TARGETS}
 	@tput setaf 1 && echo "Make sure you don't commit the secrets/ directory!" && tput sgr0
+	@tput setaf 1 0 0 && echo "Don't forget the secret/constellation_bind{dn,pw} files!" && tput sgr0
 
 mkdir_secrets:
 	mkdir -pm 0700 ${SECRETS_DIR}

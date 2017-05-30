@@ -1,6 +1,8 @@
 ---
 constellation_dbpassword: "{{ lookup('file', 'secret/constellation_dbpassword') }}"
 constellation_secret_key: "{{ lookup('file', 'secret/constellation_secret_key') }}"
+constellation_binddn: "{{ lookup('file', 'secret/constellation_binddn') }}"
+constellation_bindpw: "{{ lookup('file', 'secret/constellation_bindpw') }}"
 
 ConstellationApps:
   - name: Constellation-Vote

@@ -144,7 +144,10 @@
     owner: root
     group: root
     mode: 0644
-    
+
+- debug:
+    var: constellation_use_ssl
+
 - name: Configure nginx
   template:
     src: constellation.conf

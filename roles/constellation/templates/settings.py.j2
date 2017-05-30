@@ -104,10 +104,14 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-AUTH_LDAP_SERVER_URI = "ldaps://campus.ad.utdallas.edu"
-AUTH_LDAP_BIND_DN = ""
-AUTH_LDAP_BIND_PASSWORD = ""
-AUTH_LDAP_USER_DN_TEMPLATE = "CAMPUS\\%(user)s"
+AUTH_LDAP_SERVER_URI = "ldap://campus.ad.utdallas.edu"
+AUTH_LDAP_BIND_DN = "{{ constellation_binddn }}"
+AUTH_LDAP_BIND_PASSWORD = "{{ constellation_bindpw }}"
+
+AUTH_LDAP_USER_SEARCH = LDAPSearch("OU=People,DC=campus,DC=ad,DC=utdallas,DC=edu",
+                                   ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)")
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch("OU=Groups,DC=campus,DC=ad,DC=utdallas,DC=edu",
+                                    ldap.SCOPE_SUBTREE, "(objectClass=group)")
 
 # This bit is crucial for MS ActiveDirectory, but no-one seems to know why
 AUTH_LDAP_CONNECTION_OPTIONS = {
@@ -115,11 +119,12 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_REFERRALS: 0,
 }
 
+
 AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_staff": ["CN=CV-desktop-techs,OU=User Groups,OU=Groups,"
-                 "OU=Unix Services,OU=OPS,OU=Information Resources,"
-                 "OU=Groups,DC=campus,DC=ad,DC=utdallas,DC=edu"]
+    "is_superuser": ["CN=CV-desktop-techs,OU=User Groups,OU=Groups,"
+                     "OU=Unix Services,OU=OPS,OU=Information Resources,"
+                     "OU=Groups,DC=campus,DC=ad,DC=utdallas,DC=edu"]
 }
 
 AUTH_LDAP_USER_ATTR_MAP = {
