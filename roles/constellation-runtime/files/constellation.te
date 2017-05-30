@@ -1,0 +1,13 @@
+
+module constellation 1.0;
+
+require {
+	type httpd_t;
+	type tmp_t;
+	class sock_file write;
+}
+
+#============= httpd_t ==============
+
+#!!!! WARNING 'httpd_t' is not allowed to write or create to tmp_t.  Change the label to httpd_tmp_t.
+allow httpd_t tmp_t:sock_file write;

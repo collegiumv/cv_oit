@@ -167,3 +167,39 @@
   with_items:
     - "{{ constellation_server_name }}.pem"
     - "{{ constellation_server_name }}.key"
+  when: constellation_use_ssl
+
+- name: Create Policy directory
+  file:
+    path: /opt/constellation/policy
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy Constellation Policy file
+  copy:
+    src: constellation.te
+    dest: /opt/constellation/policy/constellation.te
+    owner: root
+    group: root
+    mode: 0644
+  register: policy
+
+- name: Check Constellation Policy
+  shell: checkmodule -M -m -o constellation.mod constellation.te
+  args:
+    chdir: /opt/constellation/policy
+  when: policy.changed
+
+- name: Compile Constellation Policy
+  shell: semodule_package -o constellation.pp -m constellation.mod
+  args:
+    chdir: /opt/constellation/policy
+  when: policy.changed
+
+- name: Install Constellation Policy
+  shell: semodule -i constellation.pp
+  args:
+    chdir: /opt/constellation/policy
+  when: policy.changed
